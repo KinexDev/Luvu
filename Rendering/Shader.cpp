@@ -1,30 +1,10 @@
 #include "Shader.h"
 
-Shader::Shader()
+Shader::Shader(const char* vertexShaderSource, const char* fragmentShaderSource)
 {
-    // default vertex shader
-    const char* vertexShaderSource =
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "uniform mat4 model; \n"
-        "uniform mat4 projection; \n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = projection * model * vec4(aPos, 1.0);\n"
-        "}\0";
-
-    // default frag shader
-    const char* fragmentShaderSource =
-        "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-        "}\0";
-
     unsigned int vertexShader = glCreateShader(GL_VERTEX_SHADER);
-	glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
-	glCompileShader(vertexShader);
+    glShaderSource(vertexShader, 1, &vertexShaderSource, nullptr);
+    glCompileShader(vertexShader);
     int  success;
     char infoLog[512];
     glGetShaderiv(vertexShader, GL_COMPILE_STATUS, &success);
@@ -77,4 +57,5 @@ void Shader::SetUniform(const char* name, const mat4& mat)
 
 Shader::~Shader()
 {
+    glDeleteProgram(shaderProgram);
 }

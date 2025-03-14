@@ -5,11 +5,6 @@ UserdataTest::UserdataTest(int number)
 	num = number;
 }
 
-UserdataTest::~UserdataTest()
-{
-	std::cout << "userdata was destroyed!";
-}
-
 int UserdataTest::Call(lua_State* L)
 {
 	UserdataTest* userdata = static_cast<UserdataTest*>(lua_touserdata(L, 1));
@@ -31,7 +26,8 @@ int UserdataTest::New(lua_State* L)
 	{
 		number = (int)lua_tonumber(L, 1);
 	}
-	vm->PushUserdata<UserdataTest>(10);
+
+	vm->PushUserdata<UserdataTest>(number);
 	return 1;
 }
 

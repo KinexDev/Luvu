@@ -2,7 +2,7 @@
 
 std::unordered_map<lua_State*, LuauVM*> LuauVM::LtoVM;
 
-int LuauVM::DoString(const std::string &source)
+int LuauVM::DoString(const std::string &source, int results)
 {
 	size_t bytecodeSize = 0;
 
@@ -11,7 +11,7 @@ int LuauVM::DoString(const std::string &source)
 
 	if (!luau_load(L, "Script", bytecode, bytecodeSize, 0))
 	{
-		if (lua_pcall(L, 0, 0, 0))
+		if (lua_pcall(L, 0, results, 0))
 		{
 			const char* error = lua_tostring(L, 1);
 			std::cout << error;
@@ -79,4 +79,58 @@ int LuauVM::NewIndexFunction(lua_State* L)
 {
 	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
 	return userdata->NewIndex(L);
+}
+
+int LuauVM::AddFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Add(L);
+}
+
+int LuauVM::SubFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Sub(L);
+}
+
+int LuauVM::MulFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Mul(L);
+}
+
+int LuauVM::DivFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Div(L);
+}
+
+int LuauVM::ToStringFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->ToString(L);
+}
+
+int LuauVM::ConcatFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Concat(L);
+}
+
+int LuauVM::EqFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Eq(L);
+}
+
+int LuauVM::LtFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Lt(L);
+}
+
+int LuauVM::LeFunction(lua_State* L)
+{
+	Userdata* userdata = static_cast<Userdata*>(lua_touserdata(L, 1));
+	return userdata->Le(L);
 }

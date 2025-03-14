@@ -6,7 +6,7 @@
 class Shader
 {
 public:
-	Shader();
+	Shader(const char* vertexShaderSource, const char* fragmentShaderSource);
 	~Shader();
 	void Use();
 	void SetUniform(const char* name, const mat4& mat);
