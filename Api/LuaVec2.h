@@ -12,7 +12,11 @@ public:
 	static void Register(lua_State* L);
 	static int New(lua_State* L);
 	static int Dist(lua_State* L);
+	static int Dot(lua_State* L);
+	static int Lerp(lua_State* L);
+	static int DistSquared(lua_State* L);
 	static int Normalize(lua_State* L);
+	static int Length(lua_State* L);
 	int Index(lua_State* L) override;
 	int NewIndex(lua_State* L) override;
 	int Add(lua_State* L) override;

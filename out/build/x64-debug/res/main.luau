@@ -1,6 +1,6 @@
-local sphere: Texture = Texture.Load("lemmon.png")
+local sphere: Texture = Texture.Load("sphere.png")
 local size: number = 20
-
+local ballCount: number = 10
 Graphics.SetWindowTitle("Physics")
 Graphics.SetWindowPos(Vec2.New((1920 / 2) - 300, (1080 / 2) - 300))
 
@@ -14,19 +14,18 @@ type Rigidbody = {
 }
 
 function NewRigidbody(Radius: number, Position: Vec2, Color: Color): Rigidbody
-    return { Radius = Radius, Position = Position, Color = Color, Velocity = Vec2.New(math.random(100) / 100, math.random(100) / 100) }
+    return { Radius = Radius, Position = Position, Color = Color, Velocity = Vec2.New(math.random(300) / 100, math.random(300) / 100) }
 end
 
-for i = 1, 10 do
+for i = 1, ballCount do
     rigidBodyList[#rigidBodyList + 1] = NewRigidbody(math.random(50, 100) / 100, 
-        Vec2.New(math.random(1, size - 2), math.random(1, size - 2)), Color.New(math.random(50, 80) / 100, math.random(80) / 100, math.random(25, 80) / 100, 1))
+        Vec2.New(math.random(1, size - 2), math.random(1, size - 4)), Color.New(math.random(50, 80) / 100, math.random(80) / 100, math.random(25, 80) / 100, 1))
 end
 
 function _update(dt: number)
     for i = 1, #rigidBodyList do
         local x: Rigidbody = rigidBodyList[i]
         x.Velocity += Vec2.New(0, 9.8) * dt
-        x.Position += x.Velocity * dt
         
         if x.Position.x > size - 1 * (x.Radius * 1) then
             x.Velocity.x = -x.Velocity.x
@@ -52,14 +51,17 @@ function _update(dt: number)
             if i == j then
                 continue
             end
-            local y: Rigidbody = rigidBodyList[i]
+            local y: Rigidbody = rigidBodyList[j]
 
-            print( Vec2.Dist(x.Position, y.Position))
+            if Vec2.Dist(x.Position, y.Position) < (y.Radius + x.Radius) / 2 then   
+                local dir: Vec2 = (x.Position - y.Position):Normalize()
+                x.Velocity = Vec2.Lerp(x.Velocity:Normalize(), dir, y.Radius):Normalize() * x.Velocity:Length()
 
-            if Vec2.Dist(x.Position, y.Position) > y.Radius + x.Radius then
-                print("colliding!")    
+                dir = (y.Position - x.Position):Normalize()
+                y.Velocity = Vec2.Lerp(y.Velocity:Normalize(), dir, x.Radius):Normalize() * y.Velocity:Length()
             end
         end
+        x.Position += x.Velocity * dt
     end
 end
 

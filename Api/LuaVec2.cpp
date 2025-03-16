@@ -12,6 +12,9 @@ void LuaVec2::Register(lua_State* L)
 	lua_newtable(L);
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &New, "New");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &Dist, "Dist");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &DistSquared, "DistSquared");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &Lerp, "Lerp");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &Dot, "Dot");
 	lua_setglobal(L, "Vec2");
 }
 
@@ -37,10 +40,67 @@ int LuaVec2::Dist(lua_State* L)
 
 	LuaVec2* currentVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 1));
 	LuaVec2* otherVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 2));
-	vec2 vec2 = { otherVec2->vec2Val[0], otherVec2->vec2Val[1] };
-	float dist = glm_vec2_distance(currentVec2->vec2Val, otherVec2->vec2Val);
-	lua_pushnumber(L, dist);
-	return 1;
+
+	if (currentVec2 && otherVec2)
+	{
+		float dist = sqrt(glm_vec2_distance2(currentVec2->vec2Val, otherVec2->vec2Val));
+		lua_pushnumber(L, dist);
+		return 1;
+	}
+	return 0;
+}
+
+int LuaVec2::Dot(lua_State* L)
+{
+	if (!lua_isuserdata(L, 1) && !lua_isuserdata(L, 2))
+		return 0;
+
+	LuaVec2* currentVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 1));
+	LuaVec2* otherVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 2));
+
+	if (currentVec2 && otherVec2)
+	{
+		float dist = glm_vec2_dot(currentVec2->vec2Val, otherVec2->vec2Val);
+		lua_pushnumber(L, dist);
+		return 1;
+	}
+	return 0;
+}
+
+int LuaVec2::Lerp(lua_State* L)
+{
+	if (!lua_isuserdata(L, 1) && !lua_isuserdata(L, 2) && !lua_isnumber(L, 3))
+		return 0;
+
+	LuaVec2* currentVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 1));
+	LuaVec2* otherVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 2));
+	float num = lua_tonumber(L, 3);
+
+	if (currentVec2 && otherVec2)
+	{
+		vec2 result;
+		glm_vec2_lerp(currentVec2->vec2Val, otherVec2->vec2Val, num, result);
+		PUSH_USERDATA(L, LuaVec2, result[0], result[1]);
+		return 1;
+	}
+	return 0;
+}
+
+int LuaVec2::DistSquared(lua_State* L)
+{
+	if (!lua_isuserdata(L, 1) && !lua_isuserdata(L, 2))
+		return 0;
+
+	LuaVec2* currentVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 1));
+	LuaVec2* otherVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 2));
+
+	if (currentVec2 && otherVec2)
+	{
+		float dist = glm_vec2_distance2(currentVec2->vec2Val, otherVec2->vec2Val);
+		lua_pushnumber(L, dist);
+		return 1;
+	}
+	return 0;
 }
 
 int LuaVec2::Normalize(lua_State* L)
@@ -49,10 +109,31 @@ int LuaVec2::Normalize(lua_State* L)
 		return 0;
 
 	LuaVec2* otherVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 1));
-	vec2 vec2 = { otherVec2->vec2Val[0], otherVec2->vec2Val[1] };
-	glm_vec2_normalize(vec2);
-	PUSH_USERDATA(L, LuaVec2, vec2[0], vec2[1]);
-	return 1;
+	if (otherVec2)
+	{
+		vec2 vec2 = { otherVec2->vec2Val[0], otherVec2->vec2Val[1] };
+		glm_vec2_normalize(vec2);
+		PUSH_USERDATA(L, LuaVec2, vec2[0], vec2[1]);
+		return 1;
+	}
+	return 0;
+}
+
+int LuaVec2::Length(lua_State* L)
+{
+	if (!lua_isuserdata(L, 1))
+		return 0;
+
+	LuaVec2* currentVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 1));
+
+	if (currentVec2)
+	{
+		float length = sqrt(currentVec2->vec2Val[0] * currentVec2->vec2Val[0] +
+			currentVec2->vec2Val[1] * currentVec2->vec2Val[1]);
+		lua_pushnumber(L, length);
+		return 1;
+	}
+	return 0;
 }
 
 int LuaVec2::Index(lua_State* L)
@@ -74,6 +155,12 @@ int LuaVec2::Index(lua_State* L)
 	if (strcmp(name, "Normalize") == 0)
 	{
 		PUSH_FUNCTION(L, &Normalize);
+		return 1;
+	}
+
+	if (strcmp(name, "Length") == 0)
+	{
+		PUSH_FUNCTION(L, &Length);
 		return 1;
 	}
 
