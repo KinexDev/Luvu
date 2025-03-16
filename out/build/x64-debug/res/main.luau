@@ -69,7 +69,9 @@ function _draw(dt: number)
     local scale: number = (Graphics.GetHeight()) / size
     for x = 0, size do
         for y = 0, size do
-            Graphics.DrawRectangle(Vec2.New((scale / 2) + scale * x, (scale / 2) + scale * y), 0, Vec2.New(scale, scale), if (x + y) % 2 == 0 then Color.New(0, 0, 1, 1) else Color.New(1, 1, 0, 1))
+            if (x + y) % 2 == 0 then
+                Graphics.DrawRectangle(Vec2.New((scale / 2) + scale * x, (scale / 2) + scale * y), 0, Vec2.New(scale, scale), Color.New(1, 1, 1, 0.1)) 
+            end
         end
     end
 
