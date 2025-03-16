@@ -27,24 +27,24 @@ function _update(dt: number)
         local x: Rigidbody = rigidBodyList[i]
         x.Velocity += Vec2.New(0, 9.8) * dt
         
-        if x.Position.x > size - 1 * (x.Radius * 1) then
+        if x.Position.x > size - 1 * x.Radius then
             x.Velocity.x = -x.Velocity.x
-            x.Position.x -= dt
+            x.Position.x = size - 1 * x.Radius
         end
 
         if x.Position.x < 0 then
             x.Velocity.x = -x.Velocity.x
-            x.Position.x += dt
+            x.Position.x = 0
         end
     
-        if x.Position.y > size - 1 * (x.Radius * 1) then
+        if x.Position.y > size - 1 * x.Radius then
             x.Velocity.y = -x.Velocity.y 
-            x.Position.y -= dt
+            x.Position.y = size - 1 * x.Radius
         end
 
         if x.Position.y < 0 then
             x.Velocity.y = -x.Velocity.y 
-            x.Position.x += dt
+            x.Position.y = 0
         end
 
         for j = 1, #rigidBodyList do
