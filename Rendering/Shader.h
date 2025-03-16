@@ -10,6 +10,8 @@ public:
 	~Shader();
 	void Use();
 	void SetUniform(const char* name, const mat4& mat);
+	void SetUniform(const char* name, const vec4& mat);
+	void SetUniform(const char* name, const int& mat);
 private:
 	unsigned int shaderProgram;
 };

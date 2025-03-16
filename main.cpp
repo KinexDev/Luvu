@@ -8,6 +8,5 @@
 
 int main()
 {
-	Game game;
-	game.Run();
+	Game::Instance().Run();
 }

@@ -1,7 +1,5 @@
 #include "LuauVM.h"
 
-std::unordered_map<lua_State*, LuauVM*> LuauVM::LtoVM;
-
 int LuauVM::DoString(const std::string &source, int results)
 {
 	size_t bytecodeSize = 0;
@@ -14,7 +12,7 @@ int LuauVM::DoString(const std::string &source, int results)
 		if (lua_pcall(L, 0, results, 0))
 		{
 			const char* error = lua_tostring(L, 1);
-			std::cout << error;
+			std::cout << error << "\n";
 			delete[] bytecode;
 			return 1;
 		}
@@ -40,6 +38,27 @@ void LuauVM::PushGlobalFunction(const std::string &name, const lua_CFunction& fu
 	lua_pop(L, 1);
 }
 
+int LuauVM::CheckFunction(const std::string& name)
+{
+	lua_getglobal(L, name.c_str());
+	int res = (lua_Type)lua_type(L, -1) == LUA_TFUNCTION;
+	lua_pop(L, 1);
+	return res;
+}
+
+int LuauVM::Execute(int nargs, int results)
+{
+	int res = lua_pcall(L, nargs, results, 0);
+
+	if (res)
+	{
+		const char* error = lua_tostring(L, 1);
+		std::cout << error << "\n";
+	}
+
+	return res;
+}
+
 void LuauVM::PushFunction(const lua_CFunction& function)
 {
 	lua_pushcclosurek(L, function, "", 0, nullptr);
@@ -49,18 +68,11 @@ LuauVM::LuauVM()
 {
 	L = luaL_newstate();
 	luaL_openlibs(L);
-	LtoVM[L] = this;
 }
 
 LuauVM::~LuauVM()
 {
 	lua_close(L);
-	LtoVM.erase(L);
-}
-
-LuauVM* LuauVM::FindVM(lua_State* L)
-{
-	return LtoVM[L];
 }
 
 void LuauVM::UserdataDestructor(void* userdata)

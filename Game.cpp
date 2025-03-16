@@ -1,49 +1,33 @@
 #include "Game.h"
 
+Game& Game::Instance()
+{
+	static Game instance;
+	return instance;
+}
+
+void Game::Close()
+{
+	glfwSetWindowShouldClose(window, true);
+}
 
 Game::Game()
 {
-	// setting up the default shader
-    const char* vertexShaderSource =
-        "#version 330 core\n"
-        "layout (location = 0) in vec3 aPos;\n"
-        "uniform mat4 model; \n"
-        "uniform mat4 projection; \n"
-        "void main()\n"
-        "{\n"
-        "   gl_Position = projection * model * vec4(aPos, 1.0);\n"
-        "}\0";
-
-    const char* fragmentShaderSource =
-        "#version 330 core\n"
-        "out vec4 FragColor;\n"
-        "void main()\n"
-        "{\n"
-        "   FragColor = vec4(1.0f, 0.5f, 0.2f, 1.0f);\n"
-        "}\0";
-
-	std::ifstream file("res/main.luau");
-
-	std::stringstream buffer;
-
-	buffer << file.rdbuf();
-	std::string str = buffer.str();
-
-	vm = new LuauVM();
-	Vec2::Register(*vm);
-
-	vm->DoString(str);
-
 	if (!glfwInit())
-		throw std::exception("Could not initalise GLFW");
+		throw std::runtime_error("Could not initalise GLFW");
 
-	window = glfwCreateWindow(800, 600, "Game", nullptr, nullptr);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
+	glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
+	glfwWindowHint(GLFW_RESIZABLE, 0);
+
+	window = glfwCreateWindow(600, 600, "Luvu", nullptr, nullptr);
 
 	if (window == nullptr)
 	{
 		std::cout << "Failed to create GLFW window" << std::endl;
 		glfwTerminate();
-		throw std::exception("Could not initalise Window!");
+		throw std::runtime_error("Could not initalise Window!");
 	}
 
 	glfwMakeContextCurrent(window);
@@ -51,27 +35,59 @@ Game::Game()
 	if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress))
 	{
 		std::cout << "Failed to initialize GLAD" << std::endl;
-		throw std::exception("Could not initalise GLAD!");
+		throw std::runtime_error("Could not initalise GLAD!");
 	}
+
+	glViewport(0, 0, 600, 600);
+
+	glfwSetFramebufferSizeCallback(window, &FrameBufferResize);
+
+	const char* vertexShaderSource =
+		"#version 330 core\n"
+		"layout (location = 0) in vec3 aPos;\n"
+		"layout(location = 1) in vec2 aTexCoord;\n"
+		"uniform mat4 model; \n"
+		"uniform mat4 projection; \n"
+		"out vec2 texCoord; \n"
+		"void main()\n"
+		"{\n"
+		"   gl_Position = projection * model * vec4(aPos, 1.0);\n"
+		"	texCoord = aTexCoord; \n"
+		"}\0";
+
+	const char* fragmentShaderSource =
+		"#version 330 core\n"
+		"out vec4 FragColor;\n"
+		"in vec2 texCoord;\n"
+		"uniform bool hasTexture;\n"
+		"uniform sampler2D tex;\n"
+		"uniform vec4 color;\n"
+		"void main()\n"
+		"{\n"
+		"	if (hasTexture)\n"
+		"	{\n"
+		"		FragColor = texture(tex, texCoord) * color;"
+		"	}\n"
+		"	else \n"
+		"	{\n"
+		"		FragColor = color;\n"
+		"	}\n"
+		"}\0";
 
 	defaultShader = new Shader(vertexShaderSource, fragmentShaderSource);
 
-	glfwSetFramebufferSizeCallback(window, &FrameBufferResize);
-	
 	// we only use 1 mesh, a quad.
 	float vertices[] = {
-	 0.5f,  0.5f, 0.0f,
-	 0.5f, -0.5f, 0.0f,
-	-0.5f, -0.5f, 0.0f,
-	-0.5f,  0.5f, 0.0f
+		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,   1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,   0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,   0.0f, 1.0f
 	};
 
 	unsigned int indices[] = {
 		0, 1, 3,
 		1, 2, 3
 	};
-
-	glViewport(0, 0, 800, 600);
 
 	glGenBuffers(1, &VBO);
 	glGenBuffers(1, &EBO);
@@ -80,8 +96,11 @@ Game::Game()
 	glBindVertexArray(VAO);
 	glBindBuffer(GL_ARRAY_BUFFER, VBO);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0);
 	glEnableVertexAttribArray(0);
+
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float)));
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
@@ -90,28 +109,50 @@ Game::Game()
 
 void Game::Run()
 {
+	std::ifstream file("res/main.luau");
+
+	std::stringstream buffer;
+	buffer << file.rdbuf();
+	std::string str = buffer.str();
+
+	vm = new LuauVM();
+	LuaTexture::Register(vm->L);
+	LuaVec2::Register(vm->L);
+	LuaColor::Register(vm->L);
+	Graphics::Register(vm->L);
+	LuaInput::Register(vm->L);
+
+	vm->DoString(str);
+
+	lastFrame = (float)glfwGetTime();
+
 	while (!glfwWindowShouldClose(window))
 	{
-		mat4 p, m;
-		//ProcessInput(window);
+		float currentFrame = (float)glfwGetTime();
+		float deltaTime = currentFrame - lastFrame;
+		lastFrame = currentFrame;
+
+		if (vm->CheckFunction("_update"))
+		{
+			lua_getglobal(vm->L, "_update");
+			lua_pushnumber(vm->L, deltaTime);
+			vm->Execute(1);
+		}
+
 		glfwGetWindowSize(window, &screenWidth, &screenHeight);
 		float ratio = (float)screenWidth / (float)screenHeight;
-		glClearColor(0.2f, 0.3f, 0.3f, 1.0f);
+		glClearColor(0, 0, 0, 0);
 		glClear(GL_COLOR_BUFFER_BIT);
 
-		glm_mat4_identity(p);
-		glm_ortho(-ratio, ratio, -1, 1, -1, 1, p);
-
-		glm_mat4_identity(m);
-		glm_scale(m, vec3{ 1.0f, 1.0f, 1.0f });
-
-		defaultShader->Use();
-		defaultShader->SetUniform("model", m);
-		defaultShader->SetUniform("projection", p);
-		glBindVertexArray(VAO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
-		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+		//glm_ortho(-ratio, ratio, -1, 1, -1, 1, p);
+		//glm_ortho(screenWidth, screenHeight, -1, 1, -1, 1, p);
+		glm_ortho(0.0f, (float)screenWidth, (float)screenHeight, 0.0f, -1.0f, 1.0f, p);
+		if (vm->CheckFunction("_draw"))
+		{
+			lua_getglobal(vm->L, "_draw");
+			lua_pushnumber(vm->L, deltaTime);
+			vm->Execute(1);
+		}
 
 		glfwSwapBuffers(window);
 		glfwPollEvents();
@@ -127,5 +168,8 @@ Game::~Game()
 {
 	delete vm;
 	delete defaultShader;
+	glDeleteBuffers(1, &VBO);
+	glDeleteBuffers(1, &EBO);
+	glDeleteVertexArrays(1, &VAO);
 	glfwTerminate();
 }

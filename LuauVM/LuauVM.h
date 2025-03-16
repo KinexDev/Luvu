@@ -11,17 +11,12 @@ class LuauVM {
 public:
 	int DoString(const std::string &source, int results = 0);
 	void PushGlobalFunction(const std::string &name, const lua_CFunction &function);
+	int CheckFunction(const std::string& name);
+	int Execute(int nargs = 0, int results = 0);
 	void PushFunction(const lua_CFunction& function);
-	template<typename T, typename... Args>
-	void PushGlobalUserdata(const std::string& name, Args ...args);
-	template<typename T, typename... Args>
-	void PushUserdata(Args ...args);
 	LuauVM();
 	~LuauVM();
 	lua_State* L;
-	static std::unordered_map<lua_State*, LuauVM*> LtoVM;
-	static LuauVM* FindVM(lua_State* L);
-private:
 	static void UserdataDestructor(void* userdata);
 	static int IndexFunction(lua_State* L);
 	static int NewIndexFunction(lua_State* L);
@@ -36,48 +31,34 @@ private:
 	static int LeFunction(lua_State* L);
 };
 
-template<typename T, typename... Args>
-inline void LuauVM::PushGlobalUserdata(const std::string& name, Args ...args)
-{
-	const char* nameCstr = name.c_str();
+#define PUSH_FUNCTION_AS_TABLE_KEY(L, func, name) \
+    PUSH_FUNCTION(L, func); \
+    lua_setfield(L, -2, name)
 
-	lua_pushvalue(L, LUA_GLOBALSINDEX);
-	PushUserdata<T>(args);
-	lua_setglobal(L, nameCstr);
-	lua_pop(L, 1);
-}
+#define PUSH_USERDATA(L, T, ...) \
+	{ \
+		void* luaUserdata = lua_newuserdatadtor(L, sizeof(T), &LuauVM::UserdataDestructor); \
+		new (luaUserdata) T(__VA_ARGS__); \
+		lua_newtable(L); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::IndexFunction, "__index"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::NewIndexFunction, "__newindex"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::AddFunction, "__add"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::SubFunction, "__sub"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::MulFunction, "__mul"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::DivFunction, "__div"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::ToStringFunction, "__tostring"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::ConcatFunction, "__concat"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::EqFunction, "__eq"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::LtFunction, "__lt"); \
+		PUSH_FUNCTION_AS_TABLE_KEY(L, &LuauVM::LeFunction, "__le"); \
+		lua_setmetatable(L, -2);\
+	} 
 
-template<typename T, typename... Args>
-inline void LuauVM::PushUserdata(Args ...args)
-{
-	void* luaUserdata = lua_newuserdatadtor(L, sizeof(T), &UserdataDestructor);
-	new (luaUserdata) T(std::forward<Args>(args)...);
+#define PUSH_FUNCTION(L, func) \
+	lua_pushcclosurek(L, func, "", 0, nullptr);
 
-	lua_newtable(L);
-
-	// this is awful...
-	PushFunction(&IndexFunction);
-	lua_setfield(L, -2, "__index");
-	PushFunction(&NewIndexFunction);
-	lua_setfield(L, -2, "__newindex");
-	PushFunction(&AddFunction);
-	lua_setfield(L, -2, "__add");
-	PushFunction(&SubFunction);
-	lua_setfield(L, -2, "__sub");
-	PushFunction(&MulFunction);
-	lua_setfield(L, -2, "__mul");
-	PushFunction(&DivFunction);
-	lua_setfield(L, -2, "__div");
-	PushFunction(&ToStringFunction);
-	lua_setfield(L, -2, "__tostring");
-	PushFunction(&ConcatFunction);
-	lua_setfield(L, -2, "__concat");
-	PushFunction(&EqFunction);
-	lua_setfield(L, -2, "__eq");
-	PushFunction(&LtFunction);
-	lua_setfield(L, -2, "__lt");
-	PushFunction(&LeFunction);
-	lua_setfield(L, -2, "__le");
-
-	lua_setmetatable(L, -2);
-}
+#define PUSH_GLOBAL_USERDATA(L, name, T, ...) \
+	lua_pushvalue(L, LUA_GLOBALSINDEX); \
+	PUSH_USERDATA(L, T, __VA_ARGS__); \
+	lua_setglobal(L, name.c_str()); \
+	lua_pop(L, 1); \

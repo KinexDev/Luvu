@@ -55,6 +55,18 @@ void Shader::SetUniform(const char* name, const mat4& mat)
     glUniformMatrix4fv(matLoc, 1, GL_FALSE, (const GLfloat*)mat);
 }
 
+void Shader::SetUniform(const char* name, const vec4& mat)
+{
+    int matLoc = glGetUniformLocation(shaderProgram, name);
+    glUniform4f(matLoc, mat[0], mat[1], mat[2], mat[3]);
+}
+
+void Shader::SetUniform(const char* name, const int& mat)
+{
+    int matLoc = glGetUniformLocation(shaderProgram, name);
+    glUniform1i(matLoc, mat);
+}
+
 Shader::~Shader()
 {
     glDeleteProgram(shaderProgram);

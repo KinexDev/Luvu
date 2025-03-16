@@ -65,14 +65,6 @@ build CMakeFiles\Luvu.dir\LuauVM\LuauVM.cpp.obj: CXX_COMPILER__Luvu_unscanned_De
   TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
   TARGET_PDB = Luvu.pdb
 
-build CMakeFiles\Luvu.dir\LuauVM\UserdataTest.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\LuauVM\UserdataTest.cpp || cmake_object_order_depends_target_Luvu
-  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
-  INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
-  OBJECT_DIR = CMakeFiles\Luvu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\LuauVM
-  TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
-  TARGET_PDB = Luvu.pdb
-
 build CMakeFiles\Luvu.dir\LuauVM\Userdata.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\LuauVM\Userdata.cpp || cmake_object_order_depends_target_Luvu
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
   INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
@@ -89,11 +81,11 @@ build CMakeFiles\Luvu.dir\Rendering\Shader.cpp.obj: CXX_COMPILER__Luvu_unscanned
   TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
   TARGET_PDB = Luvu.pdb
 
-build CMakeFiles\Luvu.dir\LuauVM\Vec2.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\LuauVM\Vec2.cpp || cmake_object_order_depends_target_Luvu
+build CMakeFiles\Luvu.dir\Api\LuaVec2.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\Api\LuaVec2.cpp || cmake_object_order_depends_target_Luvu
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
   INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
   OBJECT_DIR = CMakeFiles\Luvu.dir
-  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\LuauVM
+  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\Api
   TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
   TARGET_PDB = Luvu.pdb
 
@@ -105,6 +97,46 @@ build CMakeFiles\Luvu.dir\Game.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\G
   TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
   TARGET_PDB = Luvu.pdb
 
+build CMakeFiles\Luvu.dir\Rendering\Texture.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\Rendering\Texture.cpp || cmake_object_order_depends_target_Luvu
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
+  OBJECT_DIR = CMakeFiles\Luvu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\Rendering
+  TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
+  TARGET_PDB = Luvu.pdb
+
+build CMakeFiles\Luvu.dir\Api\Graphics.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\Api\Graphics.cpp || cmake_object_order_depends_target_Luvu
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
+  OBJECT_DIR = CMakeFiles\Luvu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\Api
+  TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
+  TARGET_PDB = Luvu.pdb
+
+build CMakeFiles\Luvu.dir\Api\LuaTexture.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\Api\LuaTexture.cpp || cmake_object_order_depends_target_Luvu
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
+  OBJECT_DIR = CMakeFiles\Luvu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\Api
+  TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
+  TARGET_PDB = Luvu.pdb
+
+build CMakeFiles\Luvu.dir\Api\LuaColor.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\Api\LuaColor.cpp || cmake_object_order_depends_target_Luvu
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
+  OBJECT_DIR = CMakeFiles\Luvu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\Api
+  TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
+  TARGET_PDB = Luvu.pdb
+
+build CMakeFiles\Luvu.dir\Api\LuaInput.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\Github\new\Luvu\Luvu\Api\LuaInput.cpp || cmake_object_order_depends_target_Luvu
+  FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -std:c++20 -ZI
+  INCLUDES = -ID:\Github\new\Luvu\Luvu\thirdparty\luau\VM\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Common\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Compiler\include -ID:\Github\new\Luvu\Luvu\thirdparty\luau\Ast\include -ID:\Github\new\Luvu\Luvu\thirdparty\glad\include -ID:\Github\new\Luvu\Luvu\thirdparty\cglm\include -external:ID:\Github\new\Luvu\Luvu\thirdparty\glfw\include -external:W0
+  OBJECT_DIR = CMakeFiles\Luvu.dir
+  OBJECT_FILE_DIR = CMakeFiles\Luvu.dir\Api
+  TARGET_COMPILE_PDB = CMakeFiles\Luvu.dir\
+  TARGET_PDB = Luvu.pdb
+
 
 # =============================================================================
 # Link build statements for EXECUTABLE target Luvu
@@ -113,7 +145,7 @@ build CMakeFiles\Luvu.dir\Game.cpp.obj: CXX_COMPILER__Luvu_unscanned_Debug D$:\G
 #############################################
 # Link the executable Luvu.exe
 
-build Luvu.exe: CXX_EXECUTABLE_LINKER__Luvu_Debug CMakeFiles\Luvu.dir\main.cpp.obj CMakeFiles\Luvu.dir\LuauVM\LuauVM.cpp.obj CMakeFiles\Luvu.dir\LuauVM\UserdataTest.cpp.obj CMakeFiles\Luvu.dir\LuauVM\Userdata.cpp.obj CMakeFiles\Luvu.dir\Rendering\Shader.cpp.obj CMakeFiles\Luvu.dir\LuauVM\Vec2.cpp.obj CMakeFiles\Luvu.dir\Game.cpp.obj | thirdparty\luau\Luau.VM.lib thirdparty\luau\Luau.Compiler.lib D$:\Github\new\Luvu\Luvu\thirdparty\glfw\lib-vc2022\glfw3.lib glad.lib thirdparty\luau\Luau.Ast.lib || glad.lib thirdparty\luau\Luau.Ast.lib thirdparty\luau\Luau.Common thirdparty\luau\Luau.Compiler.lib thirdparty\luau\Luau.VM.lib
+build Luvu.exe: CXX_EXECUTABLE_LINKER__Luvu_Debug CMakeFiles\Luvu.dir\main.cpp.obj CMakeFiles\Luvu.dir\LuauVM\LuauVM.cpp.obj CMakeFiles\Luvu.dir\LuauVM\Userdata.cpp.obj CMakeFiles\Luvu.dir\Rendering\Shader.cpp.obj CMakeFiles\Luvu.dir\Api\LuaVec2.cpp.obj CMakeFiles\Luvu.dir\Game.cpp.obj CMakeFiles\Luvu.dir\Rendering\Texture.cpp.obj CMakeFiles\Luvu.dir\Api\Graphics.cpp.obj CMakeFiles\Luvu.dir\Api\LuaTexture.cpp.obj CMakeFiles\Luvu.dir\Api\LuaColor.cpp.obj CMakeFiles\Luvu.dir\Api\LuaInput.cpp.obj | thirdparty\luau\Luau.VM.lib thirdparty\luau\Luau.Compiler.lib D$:\Github\new\Luvu\Luvu\thirdparty\glfw\lib-vc2022\glfw3.lib glad.lib thirdparty\luau\Luau.Ast.lib || glad.lib thirdparty\luau\Luau.Ast.lib thirdparty\luau\Luau.Common thirdparty\luau\Luau.Compiler.lib thirdparty\luau\Luau.VM.lib
   FLAGS = /DWIN32 /D_WINDOWS /W3 /GR /EHsc /MDd /Ob0 /Od /RTC1 -ZI
   LINK_FLAGS = /machine:x64 /debug /INCREMENTAL /subsystem:console  /NATVIS:D:/Github/new/Luvu/Luvu/thirdparty/luau/tools/natvis/VM.natvis /NATVIS:D:/Github/new/Luvu/Luvu/thirdparty/luau/tools/natvis/Ast.natvis
   LINK_LIBRARIES = thirdparty\luau\Luau.VM.lib  thirdparty\luau\Luau.Compiler.lib  D:\Github\new\Luvu\Luvu\thirdparty\glfw\lib-vc2022\glfw3.lib  glad.lib  thirdparty\luau\Luau.Ast.lib  kernel32.lib user32.lib gdi32.lib winspool.lib shell32.lib ole32.lib oleaut32.lib uuid.lib comdlg32.lib advapi32.lib

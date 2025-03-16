@@ -9,7 +9,7 @@ project ("Luvu")
 
 add_subdirectory(thirdparty/luau)
 
-add_executable (Luvu "main.cpp"  "LuauVM/LuauVM.cpp" "LuauVM/LuauVM.h" "LuauVM/Userdata.h"  "LuauVM/UserdataTest.h" "LuauVM/UserdataTest.cpp" "LuauVM/Userdata.cpp" "Rendering/Shader.h" "Rendering/Shader.cpp" "LuauVM/Vec2.h" "LuauVM/Vec2.cpp" "Game.h" "Game.cpp")
+add_executable (Luvu "main.cpp"  "LuauVM/LuauVM.cpp" "LuauVM/LuauVM.h" "LuauVM/Userdata.h" "LuauVM/Userdata.cpp" "Rendering/stb_image.h" "Rendering/Shader.h" "Rendering/Shader.cpp" "Api/LuaVec2.h" "Api/LuaVec2.cpp" "Game.h" "Game.cpp" "Rendering/Texture.cpp" "Api/Graphics.cpp" "Api/Graphics.h" "Api/LuaTexture.h" "Api/LuaTexture.cpp" "Api/LuaColor.h" "Api/LuaColor.cpp" "Api/LuaInput.h" "Api/LuaInput.cpp")
 
 add_library (glfw STATIC IMPORTED)
 set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/thirdparty/glfw/lib-vc2022/glfw3.lib)
