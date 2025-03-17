@@ -13,6 +13,7 @@ public:
 	static int New(lua_State* L);
 	static int Dist(lua_State* L);
 	static int Dot(lua_State* L);
+	static int Reflect(lua_State* L);
 	static int Lerp(lua_State* L);
 	static int DistSquared(lua_State* L);
 	static int Normalize(lua_State* L);

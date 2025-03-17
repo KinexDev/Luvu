@@ -15,6 +15,7 @@ void LuaVec2::Register(lua_State* L)
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &DistSquared, "DistSquared");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &Lerp, "Lerp");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &Dot, "Dot");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &Reflect, "Reflect");
 	lua_setglobal(L, "Vec2");
 }
 
@@ -62,6 +63,24 @@ int LuaVec2::Dot(lua_State* L)
 	{
 		float dist = glm_vec2_dot(currentVec2->vec2Val, otherVec2->vec2Val);
 		lua_pushnumber(L, dist);
+		return 1;
+	}
+	return 0;
+}
+
+int LuaVec2::Reflect(lua_State* L)
+{
+	if (!lua_isuserdata(L, 1) && !lua_isuserdata(L, 2))
+		return 0;
+
+	LuaVec2* currentVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 1));
+	LuaVec2* otherVec2 = static_cast<LuaVec2*>(lua_touserdata(L, 2));
+
+	if (currentVec2 && otherVec2)
+	{
+		vec2 result;
+		glm_vec2_reflect(currentVec2->vec2Val, otherVec2->vec2Val, result);
+		PUSH_USERDATA(L, LuaVec2, result[0], result[1]);
 		return 1;
 	}
 	return 0;
