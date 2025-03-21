@@ -7,4 +7,6 @@ namespace LuaInput {
 	int GetKey(lua_State* L);
 	int GetKeyDown(lua_State* L);
 	int GetKeyUp(lua_State* L);
+	int GetMouseButton(lua_State* L);
+	int GetMousePosition(lua_State* L);
 }

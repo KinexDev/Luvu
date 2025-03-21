@@ -9,6 +9,7 @@ namespace Graphics {
 	int SetWindowTitle(lua_State* L);
 	int SetWindowSize(lua_State* L);
 	int SetWindowPos(lua_State* L);
+	int SetWindowResizable(lua_State* L);
 	int SetFullscreen(lua_State* L);
 	int SetVSync(lua_State* L);
 }

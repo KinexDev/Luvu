@@ -10,6 +10,7 @@ void Graphics::Register(lua_State* L)
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &SetWindowTitle, "SetWindowTitle");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &SetWindowSize, "SetWindowSize");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &SetWindowPos, "SetWindowPos");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &SetWindowResizable, "SetWindowResizable");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &SetVSync, "SetVSync");
 	lua_setglobal(L, "Graphics");
 }
@@ -143,6 +144,16 @@ int Graphics::SetWindowPos(lua_State* L)
 		Game& instance = Game::Instance();
 		glfwSetWindowPos(instance.window, vec2->vec2Val[0], vec2->vec2Val[1]);
 	}
+	return 0;
+}
+
+int Graphics::SetWindowResizable(lua_State* L)
+{
+	if (!lua_isboolean(L, 1))
+		return -1;
+	int boolean = lua_toboolean(L, 1);
+	Game& instance = Game::Instance();
+	glfwSetWindowAttrib(instance.window, GLFW_RESIZABLE, boolean);
 	return 0;
 }
 

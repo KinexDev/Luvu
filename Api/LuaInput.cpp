@@ -6,10 +6,12 @@ void LuaInput::Register(lua_State* L)
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &GetKey, "GetKey");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &GetKeyDown, "GetKeyDown");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &GetKeyUp, "GetKeyUp");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &GetMouseButton, "GetMouseButton");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &GetMousePosition, "GetMousePosition");
+
 	lua_setglobal(L, "Input");
 
 	lua_newtable(L);
-
 	lua_pushinteger(L, GLFW_KEY_A);
 	lua_setfield(L, -2, "A");
 	lua_pushinteger(L, GLFW_KEY_B);
@@ -154,5 +156,27 @@ int LuaInput::GetKeyUp(lua_State* L)
 		lua_pushboolean(L, 1);
 	else
 		lua_pushboolean(L, 0);
+	return 1;
+}
+
+int LuaInput::GetMouseButton(lua_State* L)
+{
+	if (!lua_isnumber(L, 1))
+		return 0;
+	int button = (int)lua_tonumber(L, 1);
+	Game& game = Game::Instance();
+	if (glfwGetMouseButton(game.window, button) == GLFW_PRESS)
+		lua_pushboolean(L, 1);
+	else
+		lua_pushboolean(L, 0);
+	return 1;
+}
+
+int LuaInput::GetMousePosition(lua_State* L)
+{
+	double xpos, ypos;
+	Game& game = Game::Instance();
+	glfwGetCursorPos(game.window, &xpos, &ypos);
+	PUSH_USERDATA(L, LuaVec2, xpos, ypos);
 	return 1;
 }
