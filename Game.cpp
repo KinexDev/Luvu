@@ -21,7 +21,7 @@ Game::Game()
 	glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 	glfwWindowHint(GLFW_RESIZABLE, 0);
 
-	window = glfwCreateWindow(600, 600, "Luvu", nullptr, nullptr);
+	window = glfwCreateWindow(600, 600, "Untitled", nullptr, nullptr);
 
 	if (window == nullptr)
 	{
@@ -105,6 +105,16 @@ Game::Game()
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 	glBindVertexArray(0);
+
+	glEnable(GL_BLEND);
+	glEnable(GL_CULL_FACE);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, EBO);
+
+	defaultShader->Use();
+	defaultShader->SetUniform("tex", 0);
 }
 
 void Game::Run()
@@ -116,6 +126,10 @@ void Game::Run()
 	std::string str = buffer.str();
 
 	vm = new LuauVM();
+	vm->PushGlobalFunction("quit", [](lua_State* L) -> int {
+		Game::Instance().Close();
+		return 0;
+		});
 	LuaTexture::Register(vm->L);
 	LuaVec2::Register(vm->L);
 	LuaColor::Register(vm->L);
@@ -168,6 +182,8 @@ Game::~Game()
 {
 	delete vm;
 	delete defaultShader;
+	glBindVertexArray(0);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 	glDeleteBuffers(1, &VBO);
 	glDeleteBuffers(1, &EBO);
 	glDeleteVertexArrays(1, &VAO);

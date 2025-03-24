@@ -44,7 +44,7 @@ int LuaVec2::Dist(lua_State* L)
 
 	if (currentVec2 && otherVec2)
 	{
-		float dist = sqrt(glm_vec2_distance2(currentVec2->vec2Val, otherVec2->vec2Val));
+		float dist = sqrtf(glm_vec2_distance2(currentVec2->vec2Val, otherVec2->vec2Val));
 		lua_pushnumber(L, dist);
 		return 1;
 	}
@@ -147,7 +147,7 @@ int LuaVec2::Length(lua_State* L)
 
 	if (currentVec2)
 	{
-		float length = sqrt(currentVec2->vec2Val[0] * currentVec2->vec2Val[0] +
+		float length = sqrtf(currentVec2->vec2Val[0] * currentVec2->vec2Val[0] +
 			currentVec2->vec2Val[1] * currentVec2->vec2Val[1]);
 		lua_pushnumber(L, length);
 		return 1;

@@ -6,6 +6,7 @@
 
 class Texture {
 public:
+    const char* filePath;
     Texture(const char* file);
     void Bind();
     ~Texture();

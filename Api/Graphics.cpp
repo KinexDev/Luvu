@@ -5,6 +5,7 @@ void Graphics::Register(lua_State* L)
 	lua_newtable(L);
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &DrawImage, "DrawImage");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &DrawRectangle, "DrawRectangle");
+	PUSH_FUNCTION_AS_TABLE_KEY(L, &DrawLine, "DrawLine");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &GetWidth, "GetWidth");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &GetHeight, "GetHeight");
 	PUSH_FUNCTION_AS_TABLE_KEY(L, &SetWindowTitle, "SetWindowTitle");
@@ -28,9 +29,6 @@ int Graphics::DrawImage(lua_State* L)
 
 	if (texture && position && scale && color)
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
 		glActiveTexture(GL_TEXTURE0);
 		Game& instance = Game::Instance();
 		
@@ -43,17 +41,12 @@ int Graphics::DrawImage(lua_State* L)
 		glActiveTexture(GL_TEXTURE0);
 		texture->tex->Bind();
 
-		instance.defaultShader->Use();
-		instance.defaultShader->SetUniform("tex", 0);
 		instance.defaultShader->SetUniform("hasTexture", 1);
 		instance.defaultShader->SetUniform("color", color->vec4Val);
 		instance.defaultShader->SetUniform("model", mat);
 		instance.defaultShader->SetUniform("projection", instance.p);
 
-		glBindVertexArray(instance.VAO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance.EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 	return 0;
@@ -84,10 +77,6 @@ int Graphics::DrawRectangle(lua_State* L)
 
 	if (position && scale && color)
 	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-		glActiveTexture(GL_TEXTURE0);
 		Game& instance = Game::Instance();
 
 		mat4 mat;
@@ -96,17 +85,59 @@ int Graphics::DrawRectangle(lua_State* L)
 		glm_rotate(mat, glm_rad(rotation), vec3{ 0, 0, 1 });
 		glm_scale(mat, vec3{ scale->vec2Val[0], scale->vec2Val[1], 1 });
 
-		instance.defaultShader->Use();
-		instance.defaultShader->SetUniform("tex", 0);
 		instance.defaultShader->SetUniform("hasTexture", 0);
 		instance.defaultShader->SetUniform("color", color->vec4Val);
 		instance.defaultShader->SetUniform("model", mat);
 		instance.defaultShader->SetUniform("projection", instance.p);
 
-		glBindVertexArray(instance.VAO);
-		glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, instance.EBO);
 		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
+	}
+	return 0;
+}
+
+int Graphics::DrawLine(lua_State* L)
+{
+	if (!lua_isuserdata(L, 1) || !lua_isuserdata(L, 2) || !lua_isnumber(L, 3) || !lua_isuserdata(L, 4))
+		return 0;
+	LuaVec2* start = static_cast<LuaVec2*>(lua_touserdata(L, 1));
+	LuaVec2* end = static_cast<LuaVec2*>(lua_touserdata(L, 2));
+	float width = (float)lua_tonumber(L, 3);
+	LuaColor* color = static_cast<LuaColor*>(lua_touserdata(L, 4));
+
+	if (start && end && color)
+	{
+		vec2 dir;
+
+		glm_vec2_sub(end->vec2Val, start->vec2Val, dir);
+
+		float length = sqrtf(dir[0] * dir[0] +
+			dir[1] * dir[1]);
+
+		vec2 offset;
+
+		glm_vec2_divs(dir, 2, offset);
+
+		glm_vec2_normalize(dir);
+
+		float rotation = atan2(dir[1], dir[0]);
+
+		vec2 pos { start->vec2Val[0], start->vec2Val[1] };
+		glm_vec2_add(pos, offset, pos);
+
+		Game& instance = Game::Instance();
+
+		mat4 mat;
+		glm_mat4_identity(mat);
+		glm_translate(mat, vec3{ pos[0], pos[1], 0 });
+		glm_rotate(mat, rotation, vec3{ 0, 0, 1 });
+		glm_scale(mat, vec3{ length, width, 1 });
+
+		instance.defaultShader->SetUniform("hasTexture", 0);
+		instance.defaultShader->SetUniform("color", color->vec4Val);
+		instance.defaultShader->SetUniform("model", mat);
+		instance.defaultShader->SetUniform("projection", instance.p);
+
+		glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	}
 	return 0;
 }

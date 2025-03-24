@@ -6,6 +6,7 @@ namespace Graphics {
 	int GetWidth(lua_State* L);
 	int GetHeight(lua_State* L);
 	int DrawRectangle(lua_State* L);
+	int DrawLine(lua_State* L);
 	int SetWindowTitle(lua_State* L);
 	int SetWindowSize(lua_State* L);
 	int SetWindowPos(lua_State* L);
