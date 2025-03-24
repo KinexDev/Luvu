@@ -1,7 +1,7 @@
 #pragma once
 
-#include "../Game.h"
-#include "../Rendering/Texture.h"
+#include "Game.h"
+#include "Texture.h"
 
 class LuaTexture : public Userdata 
 {

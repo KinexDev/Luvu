@@ -1,4 +1,4 @@
-#include "LuaInput.h"
+#include "../include/LuaInput.h"
 
 void LuaInput::Register(lua_State* L)
 {

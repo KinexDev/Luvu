@@ -9,7 +9,17 @@ project ("Luvu")
 
 add_subdirectory(thirdparty/luau)
 
-add_executable (Luvu "main.cpp"  "LuauVM/LuauVM.cpp" "LuauVM/LuauVM.h" "LuauVM/Userdata.h" "LuauVM/Userdata.cpp" "Rendering/stb_image.h" "Rendering/Shader.h" "Rendering/Shader.cpp" "Api/LuaVec2.h" "Api/LuaVec2.cpp" "Game.h" "Game.cpp" "Rendering/Texture.cpp" "Api/Graphics.cpp" "Api/Graphics.h" "Api/LuaTexture.h" "Api/LuaTexture.cpp" "Api/LuaColor.h" "Api/LuaColor.cpp" "Api/LuaInput.h" "Api/LuaInput.cpp")
+file(GLOB_RECURSE SOURCES_FILES "src/*.cpp" )
+file(GLOB_RECURSE HEADER_FILES "include/*.h" )
+add_executable (Luvu ${SOURCES_FILES} ${HEADER_FILES} )
+
+add_custom_command(TARGET Luvu POST_BUILD
+	COMMAND ${CMAKE_COMMAND} -E copy_directory
+	${PROJECT_SOURCE_DIR}/res
+	${PROJECT_BINARY_DIR}/res
+	COMMENT "Copying resources into binary directory")
+
+target_include_directories(Luvu PRIVATE ${CMAKE_SOURCE_DIR}/include)
 
 add_library (glfw STATIC IMPORTED)
 set_target_properties(glfw PROPERTIES IMPORTED_LOCATION ${PROJECT_SOURCE_DIR}/thirdparty/glfw/lib-vc2022/glfw3.lib)

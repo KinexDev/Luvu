@@ -1,5 +1,5 @@
 #pragma once
-#include "../Game.h"
+#include "Game.h"
 namespace Graphics {
 	void Register(lua_State* L);
 	int DrawImage(lua_State* L);

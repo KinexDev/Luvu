@@ -1,4 +1,4 @@
-#include "Graphics.h"
+#include "../include/Graphics.h"
 
 void Graphics::Register(lua_State* L)
 {

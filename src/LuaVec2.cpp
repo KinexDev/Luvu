@@ -1,4 +1,4 @@
-#include "LuaVec2.h"
+#include "../include/LuaVec2.h"
 
 
 LuaVec2::LuaVec2(float x, float y)

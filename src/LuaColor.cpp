@@ -1,4 +1,4 @@
-#include "LuaColor.h"
+#include "../include/LuaColor.h"
 
 LuaColor::LuaColor(float r, float g, float b, float a)
 {

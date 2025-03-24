@@ -1,4 +1,4 @@
-#include "LuaTexture.h"
+#include "../include/LuaTexture.h"
 
 LuaTexture::LuaTexture(const char* path)
 {

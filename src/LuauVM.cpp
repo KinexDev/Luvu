@@ -1,4 +1,4 @@
-#include "LuauVM.h"
+#include "../include/LuauVM.h"
 
 int LuauVM::DoString(const std::string &source, int results)
 {

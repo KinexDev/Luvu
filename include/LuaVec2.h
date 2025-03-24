@@ -1,7 +1,7 @@
 #pragma once
 
 #include "cglm/vec2.h"
-#include "../LuauVM/Userdata.h"
+#include "Userdata.h"
 #include "sstream"
 
 class LuaVec2 : public Userdata 

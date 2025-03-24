@@ -3,15 +3,15 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include "LuauVM/LuauVM.h"
+#include "LuauVM.h"
 #include <glad/glad.h>
 #include "GLFW/glfw3.h"
-#include "Rendering/Shader.h"
-#include "Api/LuaVec2.h"
-#include "Api/LuaTexture.h"
-#include "Api/Graphics.h"
-#include "Api/LuaColor.h"
-#include "Api/LuaInput.h"
+#include "Shader.h"
+#include "LuaVec2.h"
+#include "LuaTexture.h"
+#include "Graphics.h"
+#include "LuaColor.h"
+#include "LuaInput.h"
 
 class Game {
 public:
