@@ -1,7 +1,5 @@
 local fov: number = 200
 local width: number = 1
-local near: number = 0.03
-local far: number = 1000
 local angle: number = 0
 
 Graphics.SetWindowTitle("3d example")
@@ -84,7 +82,7 @@ local cube: Mesh = Mesh.New({
 
 
 function project(p: Vec3): Vec2
-    local factor: number = fov / (math.clamp(p.z, -far, -near))
+    local factor: number = fov / p.z
     return Vec2.New(p.x * factor, p.y * factor)
 end
 

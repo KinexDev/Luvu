@@ -1,7 +1,7 @@
 local fov: number = 500
 local width: number = 2
 local moveSpeed: number = 5
-local near: number = 0.03
+local near: number = 0.01
 local far: number = 1000
 local sensitivity: number = 30
 
@@ -217,9 +217,9 @@ function playerLogic(go: GameObject, dt: number)
     math.clamp(playerY, -10, 0)
     go.position.y += playerY * dt
 
-    local negatedPosition: Vec3 = Vec3.Negate(Vec3.New(0, camera.rotation.y, 0))
-    local forwardDirection = Vec3.Rotate(Vec3.New(0, 0, -1), negatedPosition)
-    local rightDirection = Vec3.Rotate(Vec3.New(1, 0, 0), negatedPosition)
+    local yOnly: Vec3 = Vec3.New(0, camera.rotation.y, 0)
+    local forwardDirection = Vec3.Rotate(Vec3.New(0, 0, -1), yOnly)
+    local rightDirection = Vec3.Rotate(Vec3.New(1, 0, 0), yOnly)
     local velocity: Vec3 = Vec3.New(0, 0, 0)
 
     if Input.GetKey(Key.A) then
@@ -276,7 +276,7 @@ function playerLogic(go: GameObject, dt: number)
         playerY = 0
     end
 
-    camera.position = Vec3.New(-go.position.x, -go.position.y - 0.5, -go.position.z)
+    camera.position = Vec3.Add(go.position, Vec3.New(0, 0.5, 0))
 end
 
 local cube: Mesh = Mesh.New({
@@ -296,7 +296,7 @@ local cube: Mesh = Mesh.New({
 
 SceneManager.AddScene(function(index)  
     local gameObjects: { GameObject } = {}
-    GameObject.NewNoLogic(gameObjects, GoType.End, cube, Vec3.New(-7, -3, -7), Vec3.New(2, 1, 2), Color.New(0, 1, 0, 1))
+    GameObject.NewNoLogic(gameObjects, GoType.End, cube, Vec3.New(-4, -3, -9), Vec3.New(2, 1, 2), Color.New(0, 1, 0, 1))
     GameObject.NewNoLogic(gameObjects, GoType.Regular, cube, Vec3.New(0, -2, 5), Vec3.New(2, 1, 2), Color.New(1, 1, 1, 1))
     GameObject.NewNoLogic(gameObjects, GoType.Regular, cube, Vec3.New(0, -1, 0), Vec3.New(1, 1, 1), Color.New(1, 1, 1, 1))
     GameObject.NewNoLogic(gameObjects, GoType.Regular, cube, Vec3.New(0, 0, -4), Vec3.New(1, 1, 1), Color.New(1, 1, 1, 1))
@@ -321,15 +321,15 @@ SceneManager.AddScene(function(index)
     return scene
 end)
 
-SceneManager.LoadScene(2)
+SceneManager.LoadScene(1)
 
 function project(p: Vec3): Vec2
-    local factor: number = fov / (math.clamp(p.z, -far, -near))
+    local factor: number = fov / (math.clamp(p.z, near, far))
     return Vec2.New(p.x * factor, p.y * factor)
 end
 
 function isValid(p: Vec3): boolean
-    return p.z < 0
+    return p.z > 0
 end
 
 function _update(dt: number)
@@ -338,8 +338,8 @@ function _update(dt: number)
     Graphics.SetWindowTitle("3D Example (".. math.round(1 / dt) .. " fps)")
 
     local delta: Vec2 = (Input.GetMousePosition() - lastMousePosition) * dt * sensitivity
-    camera.rotation.x = math.clamp(camera.rotation.x + delta.y, -90, 90)
-    camera.rotation.y -= delta.x
+    camera.rotation.x = math.clamp(camera.rotation.x - delta.y, -90, 90)
+    camera.rotation.y += delta.x
     lastMousePosition = Input.GetMousePosition()
 end
 
@@ -356,9 +356,9 @@ function _draw(dt: number)
 
         for k, v in ipairs(go.mesh.vertices) do
             local vertex: Vec3 = Vec3.Mul(v, Vec3.Scale(go.scale, 0.5))
-            vertex = Vec3.Add(vertex, go.position)
+            vertex = Vec3.Add(vertex, Vec3.Negate(go.position))
             vertex = Vec3.Add(vertex, camera.position)
-            vertex = Vec3.Rotate(vertex, camera.rotation)
+            vertex = Vec3.Rotate(vertex, Vec3.Negate(camera.rotation))
             transformedVertexs[k] = project(vertex) + center
             validVertexes[k] = isValid(vertex)
         end
